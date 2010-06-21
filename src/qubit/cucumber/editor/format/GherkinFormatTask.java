@@ -37,6 +37,7 @@ class GherkinFormatTask implements ReformatTask {
     public void reformat() throws BadLocationException {
         if (doReformat()) {
             try {
+                int caretOffset = context.caretOffset();
                 String source = context.document().getText(0, context.document().getLength());
                 StringWriter reformattedWriter = new StringWriter();
                 PrettyFormatter formatter = new PrettyFormatter(reformattedWriter, true);
@@ -45,6 +46,7 @@ class GherkinFormatTask implements ReformatTask {
                 Lexer lexer = new I18nLexer(parser);
                 lexer.scan(source, "/", 0);
                 writeSource(reformattedWriter.getBuffer().toString());
+                context.setCaretOffset(caretOffset);
             } catch (Exception e) {
                 showError(e);
             }
